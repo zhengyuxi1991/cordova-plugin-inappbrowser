@@ -25,7 +25,7 @@ alpha:			1.0 \
     if ((self = [super init]) != nil)
     {
         options = _options;
-        self.edgesForExtendedLayout = UIRectEdgeNone;
+        //self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     return self;
 }
@@ -41,7 +41,7 @@ alpha:			1.0 \
 
     self.view.backgroundColor = [UIColor blackColor];
 
-    UIView * bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44)];
+    UIView * bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     bottomView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     bottomView.backgroundColor = bgColor;
     [self.view addSubview:bottomView];
@@ -53,7 +53,7 @@ alpha:			1.0 \
     if (navigationAtTop)
         bottomView.frame = CGRectMake(0, 0, self.view.frame.size.width, 44);
 
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(10, (bottomView.frame.size.height-40)/2, 40, 40)];
+    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(60, (bottomView.frame.size.height-40)/2, 40, 40)];
     [closeButton addTarget:self action:@selector(onClose) forControlEvents:UIControlEventTouchUpInside];
     [closeButton setImage:[self tintedImageWithColor:iconColor image:[UIImage imageNamed:@"ic_nav_close.png"]]forState:UIControlStateNormal];
     closeButton.tintColor = iconColor;
@@ -62,16 +62,19 @@ alpha:			1.0 \
 
     if (!isPDF)
     {
-        UIView *middleView = [[UIView alloc] initWithFrame:CGRectMake((bottomView.frame.size.width - 100)/2, 0, 100, bottomView.frame.size.height)];
+        UILabel *middleView = [[UILabel alloc] initWithFrame:CGRectMake((bottomView.frame.size.width - 100)/2, 0, 100, bottomView.frame.size.height)];
         middleView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         middleView.backgroundColor = [UIColor clearColor];
+        if([options objectForKey:@"title"] != nil){
+            middleView.text = [options objectForKey:@"title"];
+        }        
         [bottomView addSubview:middleView];
 
-        backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, (middleView.frame.size.height-40)/2, 40, 40)];
+        backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, (bottomView.frame.size.height-40)/2, 60, 40)];
         [backButton addTarget:self action:@selector(onBack) forControlEvents:UIControlEventTouchUpInside];
         [backButton setImage:[self tintedImageWithColor:iconColor image:[UIImage imageNamed:@"ic_nav_back.png"]]forState:UIControlStateNormal];
-        backButton.enabled = NO;
-        [middleView addSubview: backButton];
+        //backButton.enabled = NO;
+        [bottomView addSubview: backButton];
 
 
         forwardButton = [[UIButton alloc] initWithFrame:CGRectMake(60, (middleView.frame.size.height-40)/2, 40, 40)];
@@ -79,7 +82,7 @@ alpha:			1.0 \
         forwardButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [forwardButton setImage:[self tintedImageWithColor:iconColor image:[UIImage imageNamed:@"ic_nav_forward.png"]]forState:UIControlStateNormal];
         forwardButton.enabled = NO;
-        [middleView addSubview: forwardButton];
+        //[middleView addSubview: forwardButton];
 
         refreshButton = [[UIButton alloc] initWithFrame:CGRectMake(bottomView.frame.size.width-50, (bottomView.frame.size.height-40)/2, 40, 40)];
         [refreshButton addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventTouchUpInside];
@@ -88,7 +91,8 @@ alpha:			1.0 \
     }
 
 
-    webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - bottomView.frame.size.height)];
+    webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height - bottomView.frame.size.height)];
+    webView.scrollView.bounces = false;
     webView.autoresizesSubviews = true;
     webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
     webView.scalesPageToFit = true;
@@ -112,7 +116,7 @@ alpha:			1.0 \
 - (void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarHidden = true;
+    [UIApplication sharedApplication].statusBarHidden = false;
     NSString *urlString = [options objectForKey:@"url"];
 
 	if ([options objectForKey:@"urlEncoding"] != nil)
@@ -137,7 +141,7 @@ alpha:			1.0 \
 - (bool) webView:(UIWebView *)_webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     forwardButton.enabled = _webView.canGoForward;
-    backButton.enabled = _webView.canGoBack;
+    //backButton.enabled = _webView.canGoBack;
 
     return true;
 }
