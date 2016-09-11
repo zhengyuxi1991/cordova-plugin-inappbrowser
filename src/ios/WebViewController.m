@@ -65,6 +65,8 @@ alpha:			1.0 \
         UILabel *middleView = [[UILabel alloc] initWithFrame:CGRectMake((bottomView.frame.size.width - 100)/2, 0, 100, bottomView.frame.size.height)];
         middleView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         middleView.backgroundColor = [UIColor clearColor];
+        middleView.textAlignment = NSTextAlignmentCenter;
+        middleView.font = [UIFont systemFontOfSize:20];
         if([options objectForKey:@"title"] != nil){
             middleView.text = [options objectForKey:@"title"];
         }        
@@ -181,8 +183,11 @@ alpha:			1.0 \
 
 - (void) onBack
 {
-    if (webView.canGoBack)
+    if (webView.canGoBack){
         [webView goBack];
+    } else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark -
